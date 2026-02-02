@@ -1,0 +1,25 @@
+{
+  "name": "soccer-tracker",
+  "version": "1.0.0",
+  "description": "This is the repository for my WDD 330 final project.",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/JonathanMazzoli2401/soccer-tracker.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/JonathanMazzoli2401/soccer-tracker/issues"
+  },
+  "homepage": "https://github.com/JonathanMazzoli2401/soccer-tracker#readme",
+  "devDependencies": {
+    "vite": "^5.0.0"
+  }
+}
