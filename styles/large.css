@@ -1,0 +1,3 @@
+@media (max-width: 640px) {
+  .form { grid-template-columns: 1fr; }
+}
