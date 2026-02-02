@@ -33,29 +33,43 @@ export function resultsTemplate(items, type) {
   return `
     <ul class="list" role="list">
       ${items.map((it) => {
+        const img = it.badge ? `<img class="badge" src="${it.badge}" alt="${it.name} badge">` : "";
         if (type === "teams") {
           return `<li class="list-item">
-            <div>
-              <strong>${it.name}</strong>
-              <div class="muted small">${it.country || ""}</div>
+            <div class="row">
+              ${img}
+              <div>
+                <strong>${it.name}</strong>
+                <div class="muted small">${it.country || ""}</div>
+              </div>
             </div>
-            <button class="btn-outline" data-action="fav" data-type="team" data-id="${it.id}">
+            <button class="btn-outline" data-action="fav" data-type="team" data-id="${it.id}" data-name="${it.name}">
               ☆
             </button>
           </li>`;
         }
 
+        // Players are currently loaded from mock data
         return `<li class="list-item">
           <div>
             <strong>${it.name}</strong>
             <div class="muted small">${it.nationality || ""}</div>
           </div>
-          <button class="btn-outline" data-action="fav" data-type="player" data-id="${it.id}">
+          <button class="btn-outline" data-action="fav" data-type="player" data-id="${it.id}" data-name="${it.name}">
             ☆
           </button>
         </li>`;
       }).join("")}
     </ul>
+  `;
+}
+
+export function matchBlockTemplate() {
+  return `
+    <section class="card mt">
+      <h3>Matches</h3>
+      <p class="muted">Match data will be added in W06 using API-Football (fixtures/head-to-head).</p>
+    </section>
   `;
 }
 

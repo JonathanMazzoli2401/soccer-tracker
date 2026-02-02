@@ -13,3 +13,6 @@ button { cursor:pointer; }
 .small { font-size: .9rem; }
 .status { margin-top: .75rem; }
 .btn-outline { background: transparent; }
+.row { display:flex; gap:.75rem; align-items:center; }
+.badge { width: 42px; height: 42px; object-fit: contain; }
+.mt { margin-top: 1rem; }
