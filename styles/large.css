@@ -1,3 +1,28 @@
-@media (max-width: 640px) {
-  .form { grid-template-columns: 1fr; }
+@media (min-width: 980px) {
+  #app { padding: 18px 12px 32px; }
+
+  .search-row {
+    grid-template-columns: 220px 1fr;
+    align-items: center;
+  }
+
+  .panels {
+    grid-template-columns: 320px 1fr;
+    align-items: start;
+  }
 }
+
+@media (min-width: 980px) {
+  .player-hero{
+    grid-template-columns: 320px 1fr;
+    align-items: start;
+  }
+
+  .player-photo img,
+  .player-photo-placeholder{
+    height: 260px !important;
+    max-height: 260px !important;
+  }
+}
+
+
