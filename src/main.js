@@ -12,7 +12,6 @@ import { searchTeamsDB, searchPlayersDB, lookupPlayerDB } from "./api/sportsDb.j
 import { getTeamMatches } from "./api/footballData.js";
 import { getTeamIdByName } from "./data/teamMap.js";
 
-
 let lastTeamResults = [];   // Cache of last searched teams
 let lastPlayerResults = []; // Cache of last searched players
 
@@ -22,9 +21,26 @@ function parseRoute() {
   return { route: parts[0] || "", id: parts[1] || "" };
 }
 
+async function searchTeamsSmart(query) {
+  // Try normal search first
+  let items = await searchTeamsDB(query);
+  if (items.length) return items;
+
+  // If user typed multiple words, try the longest one (e.g., "real madrid" -> "madrid")
+  const parts = query.split(/\s+/).filter(Boolean);
+  if (parts.length > 1) {
+    const longest = parts.sort((a, b) => b.length - a.length)[0];
+    items = await searchTeamsDB(longest);
+    if (items.length) return items;
+  }
+
+  return [];
+}
+
 function mountHome() {
   const app = document.querySelector("#app");
   render(app, homeTemplate());
+  app.insertAdjacentHTML("beforeend", matchBlockTemplate());
 
   // Reset nodes to avoid duplicated listeners when returning to Home
   const formOld = document.querySelector("#searchForm");
@@ -59,10 +75,8 @@ function mountHome() {
 
     const statusEl = document.querySelector("#status");
 
-    // Clear previous UI
     resultsEl.innerHTML = "";
 
-    // Basic validation
     if (!query) {
       statusEl.classList.remove("loading");
       setText("#status", "Please type a search.");
@@ -70,7 +84,6 @@ function mountHome() {
       return;
     }
 
-    // Show loading state
     statusEl.classList.add("loading");
     setText("#status", "Loading...");
 
@@ -78,7 +91,7 @@ function mountHome() {
       let items = [];
 
       if (type === "teams") {
-        items = await searchTeamsDB(query);
+        items = await searchTeamsSmart(query);
         lastTeamResults = items;
       } else {
         items = await searchPlayersDB(query);
@@ -92,7 +105,6 @@ function mountHome() {
       setText("#status", "Error loading results.");
       resultsEl.innerHTML = `<p class="error">${err.message}</p>`;
     } finally {
-      // Always remove loading state
       statusEl.classList.remove("loading");
     }
   });
@@ -112,7 +124,6 @@ function mountHome() {
   });
 }
 
-
 async function mountTeamDetail(teamId) {
   const app = document.querySelector("#app");
 
@@ -131,7 +142,6 @@ async function mountTeamDetail(teamId) {
   render(app, `<section class="card"><p class="muted">Loading team details...</p></section>`);
 
   try {
-    // Map TheSportsDB team name -> football-data.org teamId
     const fdTeamId = getTeamIdByName(team.name);
 
     let upcoming = [];
@@ -158,16 +168,21 @@ async function mountTeamDetail(teamId) {
 async function mountPlayerDetail(playerId) {
   const app = document.querySelector("#app");
 
-  // Try to find in the last search results first
   const cached = lastPlayerResults.find((p) => String(p.id) === String(playerId));
 
-  render(app, `<section class="panel"><div class="panel-body"><a href="#/" class="back">← Back</a><p class="muted">Loading player details...</p></div></section>`);
+  render(
+    app,
+    `<section class="panel">
+      <div class="panel-body">
+        <a href="#/" class="back">← Back</a>
+        <p class="muted">Loading player details...</p>
+      </div>
+    </section>`
+  );
 
   try {
-    // Always lookup for full details (search endpoint is incomplete)
     const full = await lookupPlayerDB(playerId);
 
-    // If lookup doesn't include team/nationality, fallback to cached values
     const merged = {
       ...full,
       team: full.team || cached?.team || "",
@@ -189,7 +204,6 @@ async function mountPlayerDetail(playerId) {
     );
   }
 }
-
 
 // Favorites (event delegation) - added once globally
 document.addEventListener("click", (e) => {
@@ -223,3 +237,6 @@ function router() {
 
 window.addEventListener("hashchange", router);
 router();
+
+const yearEl = document.getElementById("year");
+if (yearEl) yearEl.textContent = new Date().getFullYear();

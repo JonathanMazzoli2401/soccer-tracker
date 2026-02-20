@@ -25,7 +25,6 @@ export function homeTemplate() {
           <input id="searchQuery" type="text" placeholder="Search teams or players..." required />
           <button type="submit" aria-label="Search">🔍</button>
 
-          <!-- Hidden select kept for JS compatibility if you want it -->
           <select id="searchType" style="display:none;">
             <option value="teams" selected>Teams</option>
             <option value="players">Players</option>
@@ -59,39 +58,58 @@ export function resultsTemplate(items, type) {
 
   return `
     <ul class="list" role="list">
-      ${items.map((it) => {
-        const img = it.badge
-          ? `<img class="badge" src="${it.badge}" alt="${it.name} badge">`
-          : `<div class="badge" aria-hidden="true"></div>`;
+      ${items
+        .map((it) => {
+          const name = it.name || "Unknown";
+          const hasBadge = Boolean(it.badge);
+          const img = hasBadge
+            ? `<img class="badge" src="${it.badge}" alt="${name} badge" loading="lazy">`
+            : `<div class="badge badge--placeholder" aria-hidden="true">⚽</div>`;
 
-        if (type === "teams") {
+          if (type === "teams") {
+            const country = it.country?.trim() ? it.country : "Country: N/A";
+            const league = it.league?.trim() ? it.league : "";
+            const sub = league ? `${country} • ${league}` : country;
+
+            return `
+              <li class="list-item">
+                ${img}
+                <div>
+                  <button class="item-title link" type="button" data-team-id="${it.id}">
+                    ${name}
+                  </button>
+                  <div class="item-sub">${sub}</div>
+                </div>
+                <div class="chev" aria-hidden="true">›</div>
+              </li>
+            `;
+          }
+
+          const nationality = it.nationality?.trim() ? it.nationality : "Nationality: N/A";
+          const team = it.team?.trim() ? it.team : "";
+          const sub = team ? `${nationality} • ${team}` : nationality;
+
           return `
             <li class="list-item">
-              ${img}
+              ${
+                it.thumb
+                  ? `<img class="badge" src="${it.thumb}" alt="${name} photo" loading="lazy">`
+                  : `<div class="badge badge--placeholder" aria-hidden="true">👤</div>`
+              }
               <div>
-                <div class="item-title" data-team-id="${it.id}">${it.name}</div>
-                <div class="item-sub">${it.country || ""}</div>
+                <button class="item-title link" type="button" data-player-id="${it.id}">
+                  ${name}
+                </button>
+                <div class="item-sub">${sub}</div>
               </div>
-              <div class="chev">›</div>
+              <div class="chev" aria-hidden="true">›</div>
             </li>
           `;
-        }
-
-        return `
-          <li class="list-item">
-            ${it.thumb ? `<img class="badge" src="${it.thumb}" alt="${it.name} photo">` : `<div class="badge" aria-hidden="true"></div>`}
-            <div>
-              <div class="item-title" data-player-id="${it.id}">${it.name}</div>
-              <div class="item-sub">${it.nationality || ""}${it.team ? ` • ${it.team}` : ""}</div>
-            </div>
-            <div class="chev">›</div>
-          </li>
-        `;
-      }).join("")}
+        })
+        .join("")}
     </ul>
   `;
 }
-
 
 export function matchBlockTemplate() {
   return `
@@ -105,37 +123,65 @@ export function matchBlockTemplate() {
 }
 
 export function teamDetailTemplate(team, matchesUpcoming, matchesRecent) {
+  const country = team.country?.trim() ? team.country : "N/A";
+  const league = team.league?.trim() ? team.league : "N/A";
+
+  const badge = team.badge
+    ? `<img class="team-badge" src="${team.badge}" alt="${team.name} badge" loading="lazy">`
+    : `<div class="team-badge team-badge--placeholder" aria-hidden="true">⚽</div>`;
+
   return `
-    <section class="card">
-      <a href="#/" class="muted small">← Back</a>
+    <section class="panel">
+      <div class="panel-body">
 
-      <div class="row" style="margin-top:.75rem;">
-        ${team.badge ? `<img class="badge" src="${team.badge}" alt="${team.name} badge">` : ""}
-        <div>
-          <h2 style="margin:0;">${team.name}</h2>
-          <div class="muted">${team.country || ""}</div>
+        <a href="#/" class="back">← Back</a>
+
+        <div class="team-head">
+          ${badge}
+
+          <div class="team-meta">
+            <h2 class="team-name">${team.name}</h2>
+            <div class="muted small">${country}</div>
+          </div>
+
+          <div class="team-actions">
+            <button class="btn-fav"
+              data-action="fav"
+              data-type="team"
+              data-id="${team.id}"
+              data-name="${team.name}"
+              aria-label="Favorite team">
+              ☆
+            </button>
+          </div>
         </div>
 
-        <div style="margin-left:auto;">
-          <button class="btn-outline"
-            data-action="fav"
-            data-type="team"
-            data-id="${team.id}"
-            data-name="${team.name}">
-            ☆
-          </button>
+        <div class="info-grid mt" role="list">
+          <div class="info-item" role="listitem">
+            <div class="muted small">Country</div>
+            <div>${country}</div>
+          </div>
+          <div class="info-item" role="listitem">
+            <div class="muted small">League</div>
+            <div>${league}</div>
+          </div>
         </div>
+
       </div>
     </section>
 
-    <section class="card mt">
-      <h3>Upcoming Matches</h3>
-      ${matchesTemplate(matchesUpcoming)}
+    <section class="panel mt">
+      <div class="panel-header">Upcoming Matches</div>
+      <div class="panel-body">
+        ${matchesTemplate(matchesUpcoming, false)}
+      </div>
     </section>
 
-    <section class="card mt">
-      <h3>Recent Results</h3>
-      ${matchesTemplate(matchesRecent, true)}
+    <section class="panel mt">
+      <div class="panel-header">Recent Matches</div>
+      <div class="panel-body">
+        ${matchesTemplate(matchesRecent, true)}
+      </div>
     </section>
   `;
 }
@@ -151,7 +197,7 @@ export function playerDetailTemplate(player) {
           <div class="player-photo">
             ${
               player.photo
-                ? `<img src="${player.photo}" alt="${player.name} photo">`
+                ? `<img src="${player.photo}" alt="${player.name} photo" loading="lazy">`
                 : `<div class="player-photo-placeholder" aria-hidden="true"></div>`
             }
           </div>
@@ -176,7 +222,8 @@ export function playerDetailTemplate(player) {
               data-action="fav"
               data-type="player"
               data-id="${player.id}"
-              data-name="${player.name}">
+              data-name="${player.name}"
+              aria-label="Favorite player">
               ☆
             </button>
 
@@ -191,23 +238,29 @@ export function playerDetailTemplate(player) {
   `;
 }
 
-
 function matchesTemplate(matches, showScore = false) {
   if (!matches?.length) return `<p class="muted">No matches available for this team yet.</p>`;
 
   return `
-    <ul class="list" role="list">
+    <ul class="match-list" role="list">
       ${matches
         .map((m) => {
-          const date = m.utcDate ? new Date(m.utcDate).toLocaleString() : "";
+          const date = m.utcDate ? new Date(m.utcDate).toLocaleString() : "Date: N/A";
           const home = m.homeTeam?.name || "Home";
           const away = m.awayTeam?.name || "Away";
           const score = showScore ? formatScore(m) : "";
+
           return `
-            <li class="list-item">
-              <div>
-                <strong>${home} vs ${away}</strong>
-                <div class="muted small">${date} ${score}</div>
+            <li class="match-item">
+              <div class="match-main">
+                <span class="match-team">${home}</span>
+                <span class="match-vs">vs</span>
+                <span class="match-team">${away}</span>
+              </div>
+
+              <div class="match-meta">
+                <span class="match-date">${date}</span>
+                ${showScore && score ? `<span class="match-score">${score}</span>` : ""}
               </div>
             </li>
           `;
@@ -222,5 +275,5 @@ function formatScore(m) {
   if (!ft) return "";
   const hs = ft.home ?? "-";
   const as = ft.away ?? "-";
-  return `• FT: ${hs}-${as}`;
+  return `FT ${hs}-${as}`;
 }

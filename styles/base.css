@@ -17,6 +17,7 @@
   --max: 1100px;
 }
 
+/* ---------- Base reset ---------- */
 * { box-sizing: border-box; }
 html, body { height: 100%; }
 
@@ -25,23 +26,39 @@ body {
   font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
   background: var(--bg);
   color: var(--text);
+  line-height: 1.35;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
 }
 
-/* Global media defaults */
 img { display: block; max-width: 100%; height: auto; }
 
 a { color: var(--primary); text-decoration: none; }
 a:hover { text-decoration: underline; }
 
-#app {
+button {
+  font: inherit;
+}
+
+.app{
+  flex: 1;
+  /* mantiene tu layout actual */
   max-width: var(--max);
+  width: 100%;
   margin: 0 auto;
   padding: 16px 12px 28px;
 }
 
-/* -----------------------
-   Top bar (wireframe)
------------------------ */
+/* App container */
+#app {
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: 16px 12px 28px;
+  flex: 1;
+}
+
+/* ---------- Top bar ---------- */
 .topbar {
   background: var(--bar);
   color: #fff;
@@ -61,7 +78,7 @@ a:hover { text-decoration: underline; }
   display: flex;
   align-items: center;
   gap: 10px;
-  font-weight: 700;
+  font-weight: 800;
 }
 
 .brand .logo {
@@ -94,9 +111,7 @@ a:hover { text-decoration: underline; }
 
 .icon-btn:hover { background: rgba(255,255,255,0.22); }
 
-/* -----------------------
-   Search row + tabs
------------------------ */
+/* ---------- Home shell ---------- */
 .home-shell { margin-top: 12px; }
 
 .search-row {
@@ -109,6 +124,7 @@ a:hover { text-decoration: underline; }
   gap: 12px;
 }
 
+/* Tabs */
 .tabs {
   display: inline-flex;
   border: 1px solid var(--border);
@@ -123,7 +139,7 @@ a:hover { text-decoration: underline; }
   color: var(--text);
   padding: 10px 14px;
   cursor: pointer;
-  font-weight: 600;
+  font-weight: 700;
 }
 
 .tab[aria-selected="true"] {
@@ -131,12 +147,14 @@ a:hover { text-decoration: underline; }
   color: var(--primary);
 }
 
+/* Search bar */
 .searchbar {
   display: grid;
   grid-template-columns: 1fr 44px;
   border: 1px solid var(--border);
   border-radius: 6px;
   overflow: hidden;
+  background: #fff;
 }
 
 .searchbar input {
@@ -157,9 +175,7 @@ a:hover { text-decoration: underline; }
 
 .searchbar button:hover { background: #2a6290; }
 
-/* -----------------------
-   Columns area (wireframe feel)
------------------------ */
+/* ---------- Panels ---------- */
 .panels {
   margin-top: 12px;
   display: grid;
@@ -177,13 +193,14 @@ a:hover { text-decoration: underline; }
 .panel-header {
   padding: 12px 12px 10px;
   border-bottom: 1px solid var(--border);
-  font-weight: 800;
+  font-weight: 900;
 }
 
 .panel-body { padding: 10px 12px 12px; }
 
+/* Status block */
 .status {
-  margin-top: 10px;
+  margin-top: 6px;
   padding: 10px 12px;
   border: 1px dashed var(--border);
   border-radius: 6px;
@@ -194,9 +211,7 @@ a:hover { text-decoration: underline; }
   align-items: center;
 }
 
-/* -----------------------
-   Results list rows (wireframe style)
------------------------ */
+/* ---------- Lists ---------- */
 .list {
   list-style: none;
   margin: 0;
@@ -223,11 +238,24 @@ a:hover { text-decoration: underline; }
   object-fit: cover;
 }
 
+.badge--placeholder{
+  display:grid;
+  place-items:center;
+  font-size:16px;
+  color: var(--muted);
+}
+
 .item-title {
-  font-weight: 800;
+  font-weight: 900;
   color: var(--text);
   cursor: pointer;
+  text-align: left;
+  background: transparent;
+  border: 0;
+  padding: 0;
 }
+
+.item-title:hover { text-decoration: underline; }
 
 .item-sub {
   font-size: 0.9rem;
@@ -236,11 +264,11 @@ a:hover { text-decoration: underline; }
 
 .chev {
   color: var(--muted);
-  font-size: 18px;
+  font-size: 20px;
   justify-self: end;
 }
 
-/* Favorite button (wireframe size) */
+/* Favorite button */
 .btn-fav {
   border: 1px solid var(--border);
   background: #f6f9fc;
@@ -248,36 +276,181 @@ a:hover { text-decoration: underline; }
   width: 34px;
   height: 34px;
   cursor: pointer;
+  display: grid;
+  place-items: center;
 }
 
 .btn-fav:hover { background: #eef5fd; }
 
-/* -----------------------
-   Detail screen blocks
------------------------ */
-.detail-head {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 12px;
-}
+/* ---------- Common helpers ---------- */
+h2, h3 { margin: 0 0 8px; }
+.muted { color: var(--muted); }
+.small { font-size: 0.92rem; }
+.mt { margin-top: 12px; }
+.error { color: #b42318; }
 
 .back {
   display: inline-flex;
   align-items: center;
   gap: 6px;
   color: var(--muted);
-  font-weight: 600;
+  font-weight: 700;
 }
 
-h2, h3 { margin: 0 0 8px; }
-.muted { color: var(--muted); }
-.small { font-size: 0.92rem; }
-.mt { margin-top: 12px; }
+/* ---------- Team detail (wireframe-like) ---------- */
+.team-head {
+  display: grid;
+  grid-template-columns: 56px 1fr auto;
+  gap: 12px;
+  align-items: center;
+  margin-top: 10px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid var(--border);
+}
 
-.error { color: #b42318; }
+.team-badge {
+  width: 56px;
+  height: 56px;
+  border-radius: 12px;
+  border: 1px solid var(--border);
+  background: #eef3f8;
+  object-fit: cover;
+}
 
-/* Loading spinner in status */
+.team-badge--placeholder{
+  display:grid;
+  place-items:center;
+  color: var(--muted);
+  font-weight: 900;
+}
+
+.team-name {
+  margin: 0;
+  font-weight: 1000;
+  letter-spacing: 0.2px;
+}
+
+.team-actions { display: flex; align-items: center; }
+
+/* Info grid under team header */
+.info-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+
+.info-item {
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: #f9fbfe;
+  padding: 10px 12px;
+}
+
+/* ---------- Matches ---------- */
+.match-list{
+  list-style:none;
+  margin:0;
+  padding:0;
+}
+
+.match-item{
+  padding: 12px 10px;
+  border-bottom: 1px solid var(--border);
+}
+
+.match-item:last-child{ border-bottom:0; }
+
+.match-main{
+  display:flex;
+  gap:10px;
+  align-items:center;
+  flex-wrap: wrap;
+  font-weight: 900;
+}
+
+.match-team{
+  white-space: normal;
+  overflow-wrap: anywhere;
+}
+
+.match-vs{
+  color: var(--muted);
+  font-weight: 800;
+}
+
+.match-meta{
+  margin-top: 6px;
+  display:flex;
+  gap:10px;
+  align-items:center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  color: var(--muted);
+  font-size: 0.92rem;
+}
+
+.match-date{
+  overflow-wrap: anywhere;
+}
+
+.match-score{
+  background: #eef5fd;
+  border: 1px solid var(--border);
+  padding: 2px 10px;
+  border-radius: 999px;
+  color: var(--text);
+  font-weight: 900;
+  white-space: nowrap;
+}
+
+/* ---------- Player detail ---------- */
+.player-hero{
+  display: grid;
+  gap: 14px;
+  margin-top: 12px;
+}
+
+.player-photo{
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  overflow: hidden;
+  background: #eef3f8;
+}
+
+.player-photo img{
+  width: 100%;
+  height: 260px;
+  object-fit: cover;
+  display: block;
+}
+
+.player-photo-placeholder{
+  height: 260px;
+}
+
+.player-meta .player-name{
+  margin: 0;
+  font-weight: 1000;
+}
+
+.player-facts{
+  margin-top: 10px;
+  display: grid;
+  gap: 6px;
+  padding: 10px 12px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: #f9fbfe;
+}
+
+/* Make long descriptions readable */
+.player-meta p {
+  margin: 0;
+  max-width: 72ch;
+  line-height: 1.55;
+}
+
+/* ---------- Loading spinner ---------- */
 .loading::before {
   content: "";
   width: 10px;
@@ -291,64 +464,7 @@ h2, h3 { margin: 0 0 8px; }
 
 @keyframes spin { to { transform: rotate(360deg); } }
 
-/* -----------------------
-   Player Detail (hard fix)
-   Works when template uses .player-photo container
------------------------ */
-.player-hero{
-  display: grid;
-  gap: 12px;
-  margin-top: 10px;
-}
-
-.player-photo{
-  border: 1px solid var(--border);
-  border-radius: 10px;
-  overflow: hidden;
-  background: #eef3f8;
-}
-
-/* This works even if the <img> has no class */
-.player-photo img{
-  width: 100% !important;
-  max-width: 100% !important;
-  height: 220px !important;
-  max-height: 220px !important;
-  object-fit: cover !important;
-  display: block !important;
-}
-
-.player-photo-placeholder{
-  height: 220px;
-}
-
-.player-facts{
-  margin-top: 10px;
-  display: grid;
-  gap: 6px;
-  padding: 10px 12px;
-  border: 1px solid var(--border);
-  border-radius: 8px;
-  background: #f9fbfe;
-}
-
-/* -----------------------
-   SAFETY NET (fix huge image even if template is wrong)
-   If your detail page shows a big photo at the top, this forces it down.
-   Only targets images inside .panel on detail routes.
------------------------ */
-.panel .panel-body > img{
-  width: 100% !important;
-  max-width: 520px !important;
-  height: 260px !important;
-  object-fit: cover !important;
-  border-radius: 10px;
-  border: 1px solid var(--border);
-}
-
-/* -----------------------
-   Animations (W06)
------------------------ */
+/* ---------- Animations ---------- */
 @keyframes fadeUp {
   from { opacity: 0; transform: translateY(6px); }
   to   { opacity: 1; transform: translateY(0); }
@@ -373,4 +489,45 @@ h2, h3 { margin: 0 0 8px; }
 
 .btn-fav:active{
   animation: pop .12s ease-out;
+}
+
+/* ---------- Accessibility ---------- */
+:focus-visible {
+  outline: 3px solid rgba(47, 111, 163, 0.45);
+  outline-offset: 2px;
+  border-radius: 6px;
+}
+
+.skip-link {
+  position: absolute;
+  left: -999px;
+  top: 10px;
+  background: #fff;
+  padding: 8px 12px;
+  border-radius: 6px;
+  border: 1px solid var(--border);
+  z-index: 100;
+}
+
+.skip-link:focus { left: 10px; }
+
+/* ---------- Footer ---------- */
+.site-footer {
+  margin-top: auto;
+  padding: 20px 12px;
+  background: #ffffff;
+  border-top: 1px solid var(--border);
+}
+
+.footer-inner {
+  max-width: var(--max);
+  margin: 0 auto;
+  text-align: center;
+  font-size: 0.9rem;
+  color: var(--muted);
+}
+
+.footer-inner a {
+  color: var(--primary);
+  font-weight: 700;
 }
