@@ -4,12 +4,47 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Soccer Tracker</title>
-  <script type="module" crossorigin src="/soccer-tracker/assets/index-BjFMNDjc.js"></script>
+    <meta name="description" content="A soccer tracking app where you can view players, teams, and matches.">
+    <meta name="author" content="Jonathan Mazzoli">
+    <link rel="icon" href="/soccer-tracker/assets/favicon-CYagtmlI.ico">
+
+  <script type="module" crossorigin src="/soccer-tracker/assets/index-Wt_jCRl4.js"></script>
+  <link rel="stylesheet" crossorigin href="/soccer-tracker/assets/index-Cv953CyW.css">
 </head>
 <body>
-    <h1>Soccer Tracker</h1>
-    <p>Project setup working ✔</p>
+    <a class="skip-link" href="#app">Skip to content</a>
 
-    <main id="app" class="container"></mai>
+    <header class="topbar">
+        <div class="topbar-inner">
+            <div class="brand">
+                <div class="logo">⚽</div>
+                <span>Soccer Tracker</span>
+            </div>
+
+            <div class="top-actions">
+                <button class="icon-btn" aria-label="Favorites">
+                    ★
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main id="app" class="app"></main>
+
+    <footer class="site-footer">
+        <div class="footer-inner">
+            <p>© <span id="year"></span> Jonathan Mazzoli • Soccer Tracker</p>
+            <p>
+                Data from
+                <a href="https://www.thesportsdb.com/" target="_blank" rel="noopener">
+                    TheSportsDB
+                </a>
+                and
+                <a href="https://www.football-data.org/" target="_blank" rel="noopener">
+                    Football-Data.org
+                </a>
+            </p>
+        </div>
+    </footer>
 </body>
 </html>
