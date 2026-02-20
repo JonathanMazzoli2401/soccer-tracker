@@ -2,7 +2,7 @@
 const DEV_BASE = "/fd/v4";
 
 // Production uses Cloudflare Worker
-const WORKER_BASE = import.meta.env.VITE_FD_WORKER_BASE; // e.g. https://ancient-paper-fac2.jonathanmazzoli25.workers.dev
+const WORKER_BASE = import.meta.env.VITE_FD_WORKER_BASE; 
 
 function getBase() {
   if (import.meta.env.DEV) return DEV_BASE;
@@ -11,14 +11,13 @@ function getBase() {
     throw new Error("Missing VITE_FD_WORKER_BASE in production.");
   }
 
-  // Always normalize to: https://...workers.dev/v4
+
   return WORKER_BASE.replace(/\/$/, "") + "/v4";
 }
 
 function buildUrl(endpoint, params = {}) {
   const base = getBase();
 
-  // base is absolute in production, relative in dev
   const url = base.startsWith("http")
     ? new URL(base + endpoint)
     : new URL(base + endpoint, window.location.origin);
@@ -37,7 +36,7 @@ async function fdFetch(endpoint, params = {}) {
     ? {
         headers: { "X-Auth-Token": import.meta.env.VITE_FD_TOKEN },
       }
-    : {}; // production: Worker injects token
+    : {}; 
 
   if (import.meta.env.DEV && !import.meta.env.VITE_FD_TOKEN) {
     throw new Error("Missing VITE_FD_TOKEN in .env (local dev).");

@@ -98,7 +98,6 @@ function rankByQuery(items, query) {
   });
 }
 
-// --- Public API --------------------------------------------------
 
 /**
  * Search teams by name.
